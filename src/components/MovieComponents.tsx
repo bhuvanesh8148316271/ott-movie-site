@@ -30,15 +30,15 @@ const MovieInfo = styled.span`
 
   text-transform: capitalise;
 `;
-const MovieComponents = (props, movieDetail: any) => {
-  console.log("movieDetail=" + JSON.stringify(movieDetail));
+const MovieComponents = (movieDetail: any) => {
+  console.log("MovieComponents::movieDetail = " + JSON.stringify(movieDetail.movieDetail));
   return (
     <MovieContainer>
-      <CoverImage src="https://www.netflix.com/in/title/81642992" />
-      <MovieName>Love Today</MovieName>
+      <CoverImage src={movieDetail.movieDetail.Poster} />
+      <MovieName>{movieDetail.movieDetail.Title}</MovieName>
       <InfoColumn>
-        <MovieInfo>Year: 2022</MovieInfo>
-        <MovieInfo>Type: Movie</MovieInfo>
+        <MovieInfo>Year: {movieDetail.movieDetail.Year}</MovieInfo>
+        <MovieInfo>Type: {movieDetail.movieDetail.Type}</MovieInfo>
       </InfoColumn>
     </MovieContainer>
   );

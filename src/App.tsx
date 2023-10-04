@@ -87,7 +87,6 @@ function App() {
 
   const onTextChange = (event: any) => {
     clearTimeout(timeoutId);
-
     updateSearchQuery(event.target.value);
     const timeout = setTimeout(() => FetchData(event.target.value), 500);
     //updateTimeoutId(timeout);
@@ -110,10 +109,11 @@ function App() {
       </Header>
       <MovieListContainer>
         {
-          movieList?.length ? movieList.map( (movie) => {
-            console.log("Movie Detail " + movie);
-          return  <MovieComponents movieDetail = {movie} />;	
-          }):"No Movies";
+          movieList?.length ?
+            movieList.map((movie) => {
+              console.log("Movie Detail " + JSON.stringify(movie));
+              return (<MovieComponents movieDetail={movie} />);
+            }) : "No Movies"
         }
       </MovieListContainer>
     </Container>
@@ -121,11 +121,3 @@ function App() {
 }
 
 export default App;
-{
-  movieList?.length
-    ? movieList.map((movie) => {
-        console.log(movie); // Log each movie object to the console
-        return <MovieComponents movieDetail={movie} />;
-      })
-    : "no movie search";
-}
