@@ -12,8 +12,8 @@ const CoverImage = styled.img`
   object-fit: cover;
 `;
 const MovieName = styled.span`
-  fontsize: 16px;
-  fontweight: 600;
+  font-size: 16px;
+  font-weight: 600;
   color: black;
   margin: 15px 0;
 `;
@@ -24,16 +24,18 @@ const InfoColumn = styled.div`
 `;
 
 const MovieInfo = styled.span`
-  fontsize: 16px;
-  fontweight: 500;
+  font-size: 16px;
+  font-weight: 500;
   color: black;
 
   text-transform: capitalise;
 `;
 const MovieComponents = (movieDetail: any) => {
-  console.log("MovieComponents::movieDetail = " + JSON.stringify(movieDetail.movieDetail));
+  //console.log("MovieComponents::movieDetail = " + JSON.stringify(movieDetail.movieDetail));
   return (
-    <MovieContainer>
+    <MovieContainer
+      onClick={() => movieDetail.onMovieSelect(movieDetail.movieDetail.Title)}
+    >
       <CoverImage src={movieDetail.movieDetail.Poster} />
       <MovieName>{movieDetail.movieDetail.Title}</MovieName>
       <InfoColumn>

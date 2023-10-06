@@ -7,6 +7,7 @@ import { useState } from "react";
 import styled from "styled-components";
 import MovieComponents from "./components/MovieComponents";
 import axios from "axios";
+import MovieInfoComponent from "./components/MovieInfoComponent";
 const API_KEY = "55bb103b";
 
 const Container = styled.div`
@@ -74,15 +75,17 @@ function App() {
   const [searchQuery, updateSearchQuery] = useState();
   const [timeoutId, updateTimeoutId] = useState();
   const [movieList, updateMovieList] = useState([]);
+  const [selectedMovie, onMovieSelect] = useState(null);
+
   // api call
   const FetchData = async (searchString: any) => {
     const url = `https://www.omdbapi.com/?s=${searchString}&apikey=${API_KEY}`;
-    console.log("url=" + url);
+    //console.log("url=" + url);
     const response = await axios.get(url);
 
-    console.log("response=" + JSON.stringify(response.data.Search));
+    //console.log("response=" + JSON.stringify(response.data.Search));
     updateMovieList(response.data.Search);
-    console.log("movieList=" + JSON.stringify(movieList));
+    // console.log("movieList=" + JSON.stringify(movieList));
   };
 
   const onTextChange = (event: any) => {
@@ -107,14 +110,20 @@ function App() {
           />
         </SearchBox>
       </Header>
+
+      {selectedMovie && <MovieInfoComponent selectedMovie={selectedMovie} />}
       <MovieListContainer>
-        {
-          movieList?.length ?
-            movieList.map((movie) => {
-              console.log("Movie Detail " + JSON.stringify(movie));
-              return (<MovieComponents movieDetail={movie} />);
-            }) : "No Movies"
-        }
+        {movieList?.length
+          ? movieList.map((movie) => {
+              //console.log("Movie Detail " + JSON.stringify(movie));
+              return (
+                <MovieComponents
+                  movieDetail={movie}
+                  onMovieSelect={onMovieSelect}
+                />
+              );
+            })
+          : "No Movies"}
       </MovieListContainer>
     </Container>
   );
