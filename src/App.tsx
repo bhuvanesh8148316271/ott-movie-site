@@ -23,7 +23,7 @@ const Header = styled.div`
   background-color: black;
   color: white;
   align-items: center;
-  padding: 10px;
+  padding: 2px;
   font-size: 20px;
   font-weight: bold;
   box-shadow: 0 3px 6px 0 #555;
@@ -43,12 +43,13 @@ const MovieImage = styled.img`
 const SearchBox = styled.div`
   display: flex;
   flex-direction: row;
-  padding: 10px 10px;
+  padding: 9px 10px;
   background-color: white;
   border-radius: 6px;
-  margin-left: 20px;
-  width: 50%;
+  margin-left: auto; /* This pushes it to the right */
+  margin-right: 10px;
   align-items: center;
+  width: 30%;
 `;
 
 const SearchIcon = styled.img`
@@ -63,12 +64,17 @@ const SearchInput = styled.input`
   outline: none;
   margin-left: 15px;
 `;
+
 const MovieListContainer = styled.div`
   display: flex;
-  flex-direction: row;
   flex-wrap: wrap;
-  padding: 30px;
+  padding: 20px;
   justify-content: space-evenly;
+`;
+
+const MovieItem = styled.div`
+  flex: 0 0 calc(5.33% - 6px); /* Adjust the width as needed */
+  margin-bottom: 12px; /* Reduce the vertical spacing between rows */
 `;
 
 function App() {
@@ -110,17 +116,17 @@ function App() {
           />
         </SearchBox>
       </Header>
-
       {selectedMovie && <MovieInfoComponent selectedMovie={selectedMovie} />}
       <MovieListContainer>
         {movieList?.length
-          ? movieList.map((movie) => {
-              //console.log("Movie Detail " + JSON.stringify(movie));
+          ? movieList.map((movie, index) => {
               return (
-                <MovieComponents
-                  movieDetail={movie}
-                  onMovieSelect={onMovieSelect}
-                />
+                <MovieItem key={index}>
+                  <MovieComponents
+                    movieDetail={movie}
+                    onMovieSelect={onMovieSelect}
+                  />
+                </MovieItem>
               );
             })
           : "No Movies"}
