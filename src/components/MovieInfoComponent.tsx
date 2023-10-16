@@ -94,6 +94,7 @@ const MovieInfoComponent = ({ selectedMovie }: { selectedMovie: string }) => {
     try {
       const response = await axios.get(url);
       setMovieData(response.data);
+      window.scrollTo(0, 0);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -105,6 +106,14 @@ const MovieInfoComponent = ({ selectedMovie }: { selectedMovie: string }) => {
       fetchData(selectedMovie);
     }
   }, [selectedMovie]);
+
+  const getStarRating = (rating: string) => {
+    const starCount = Math.round(parseFloat(rating) / 2);
+    const goldStar = "★";
+    const emptyStar = "☆";
+    const stars = goldStar.repeat(starCount) + emptyStar.repeat(5 - starCount); // Display 5 stars in total
+    return <span style={{ color: "gold" }}>{stars}</span>;
+  };
 
   return (
     <Container>
@@ -177,8 +186,12 @@ const MovieInfoComponent = ({ selectedMovie }: { selectedMovie: string }) => {
               <Value>{movieData.imdbVotes}</Value>
             </MovieInfoRow>
             <MovieInfoRow>
-              <Label>IMDB ID:</Label>
-              <Value>{movieData.imdbID}</Value>
+              <Label>IMDB Rating:</Label>
+              <Value>
+                {movieData.imdbRating
+                  ? getStarRating(movieData.imdbRating)
+                  : "N/A"}
+              </Value>
             </MovieInfoRow>
             <MovieInfoRow>
               <Label>DVD Release:</Label>
