@@ -1,30 +1,6 @@
-import React, { ReactNode, useEffect, useState } from "react";
+import React, { useEffect, useState, Dispatch, SetStateAction } from "react";
 import styled from "styled-components";
 import axios from "axios";
-
-interface MovieData {
-  Country: ReactNode;
-  Awards: ReactNode;
-  Metascore: ReactNode;
-  imdbVotes: ReactNode;
-  imdbID: ReactNode;
-  DVD: ReactNode;
-  BoxOffice: ReactNode;
-  Language: ReactNode;
-  Plot: ReactNode;
-  Actors: ReactNode;
-  Writer: ReactNode;
-  Director: ReactNode;
-  Genre: ReactNode;
-  Rated: ReactNode;
-  Released: ReactNode;
-  Runtime: ReactNode;
-  Title: string;
-  Poster: string;
-  imdbRating: string;
-  Year: string;
-  Type: string;
-}
 
 const API_KEY = "55bb103b"; // Replace with your actual API key
 
@@ -37,8 +13,6 @@ const Container = styled.div`
 `;
 
 const CoverImage = styled.img`
-  // height: 400px;
-  // object-fit: cover;
   height: 400px;
   width: 20%;
   object-fit: cover;
@@ -46,27 +20,12 @@ const CoverImage = styled.img`
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 `;
 
-/*const InfoColumn = styled.div`
-  display: block;
-  flex-direction: column;
-  justify-content: space-between;
-`;
-
-const MovieName = styled.span`
-  font-size: 16px;
-  font-weight: 600;
-  color: black;
-  margin: 15px 0;
-`; */
-
 const MovieInfoContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 6px;
   background-color: #fff;
   padding: 18px;
-  //border-radius: 18px;
-  /*box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);*/
 `;
 
 const MovieInfoRow = styled.div`
@@ -85,34 +44,42 @@ const Value = styled.span`
   margin-left: 16px;
 `;
 
-const MovieInfoComponent = ({ selectedMovie }: { selectedMovie: string }) => {
-  const [movieData, setMovieData] = useState<MovieData | null>(null);
+interface MovieInfoComponentProps {
+  selectedMovie: string;
+  isFullDetails: boolean;
+  setIsFullDetails: Dispatch<SetStateAction<boolean>>;
+}
 
-  // Function to fetch movie data from the API
-  const fetchData = async (searchString: string) => {
-    const url = `https://www.omdbapi.com/?t=${searchString}&apikey=${API_KEY}`;
-    try {
-      const response = await axios.get(url);
-      setMovieData(response.data);
-      window.scrollTo(0, 0);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
+const MovieInfoComponent: React.FC<MovieInfoComponentProps> = ({
+  selectedMovie,
+  isFullDetails,
+  setIsFullDetails,
+}) => {
+  const [movieData, setMovieData] = useState<any | null>(null);
 
-  // Call fetchData when the component mounts or when selectedMovie changes
   useEffect(() => {
-    if (selectedMovie) {
-      fetchData(selectedMovie);
-    }
-  }, [selectedMovie]);
+    const fetchData = async () => {
+      const plot = isFullDetails ? "full" : "short";
+      if (!selectedMovie) {
+        setMovieData(null);
+        return;
+      }
 
-  const getStarRating = (rating: string) => {
-    const starCount = Math.round(parseFloat(rating) / 2);
-    const goldStar = "★";
-    const emptyStar = "☆";
-    const stars = goldStar.repeat(starCount) + emptyStar.repeat(5 - starCount); // Display 5 stars in total
-    return <span style={{ color: "gold" }}>{stars}</span>;
+      const url = `https://www.omdbapi.com/?i=${selectedMovie}&apikey=${API_KEY}&plot=${plot}`;
+      try {
+        const response = await axios.get(url);
+        setMovieData(response.data);
+        window.scrollTo(0, 0);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, [selectedMovie, isFullDetails]);
+
+  const toggleDetails = () => {
+    setIsFullDetails(!isFullDetails);
   };
 
   return (
@@ -178,28 +145,26 @@ const MovieInfoComponent = ({ selectedMovie }: { selectedMovie: string }) => {
               <Value>{movieData.Metascore}</Value>
             </MovieInfoRow>
             <MovieInfoRow>
-              <Label>IMDB Rating:</Label>
+              <Label>imdb Rating:</Label>
               <Value>{movieData.imdbRating}</Value>
             </MovieInfoRow>
             <MovieInfoRow>
-              <Label>IMDB Votes:</Label>
+              <Label>imdbVotes:</Label>
               <Value>{movieData.imdbVotes}</Value>
             </MovieInfoRow>
             <MovieInfoRow>
-              <Label>IMDB Rating:</Label>
-              <Value>
-                {movieData.imdbRating
-                  ? getStarRating(movieData.imdbRating)
-                  : "N/A"}
-              </Value>
-            </MovieInfoRow>
-            <MovieInfoRow>
-              <Label>DVD Release:</Label>
+              <Label>DVD release:</Label>
               <Value>{movieData.DVD}</Value>
             </MovieInfoRow>
             <MovieInfoRow>
               <Label>Box Office:</Label>
               <Value>{movieData.BoxOffice}</Value>
+            </MovieInfoRow>
+
+            <MovieInfoRow>
+              <a href="#" onClick={toggleDetails}>
+                {isFullDetails ? "View Less" : "View More"}
+              </a>
             </MovieInfoRow>
           </MovieInfoContainer>
         </>

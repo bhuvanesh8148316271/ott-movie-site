@@ -34,7 +34,8 @@ const MovieComponents = (movieDetail: any) => {
   //console.log("MovieComponents::movieDetail = " + JSON.stringify(movieDetail.movieDetail));
   return (
     <MovieContainer
-      onClick={() => movieDetail.onMovieSelect(movieDetail.movieDetail.Title)}
+      onClick={() => movieDetail.onMovieSelect(movieDetail.movieDetail.imdbID)}
+      //onClick={() => movieDetail.onMovieSelect(movieDetail.movieDetail.Title)}
     >
       <CoverImage src={movieDetail.movieDetail.Poster} />
       <MovieName>{movieDetail.movieDetail.Title}</MovieName>
